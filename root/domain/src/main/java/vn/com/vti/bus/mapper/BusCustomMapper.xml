@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.com.vti.bus.mapper.BusCustomMapper">
+	<resultMap id="busCustomMapper"
+		type="vn.com.vti.bus.entity.BusCustomized">
+		
+		 <id column="bus_id" property="busId"/>
+		 <result column="route_id" property="routeId"/>
+		 <result column="row_num" property="rowNum"/>
+		 <result column="column_num" property="columnNum"/>
+		 <result column="number_place" property="numberPlace"/>
+		 <result column="number_division" property="numberDivision"/>
+		 <result column="number_kana" property="numberKana"/>
+		 <result column="number_first_half" property="numberFirstHalf"/>
+		 <result column="number_latter_half" property="numberLatterHalf"/>
+		 
+		  	 
+	</resultMap>	
+	<select id="selectAll" resultMap="busCustomMapper">
+SELECT
+	*
+FROM
+	BUS
+ORDER BY
+	BUS_ID
+	
+	</select>
+	
+	<select id="selectByBusId" resultMap="busCustomMapper">
+SELECT
+	*
+FROM
+	BUS
+WHERE 
+	BUS_ID = #{busId}
+ORDER BY
+	BUS_ID
+	
+	</select>
+	
+	<select id="selectByRouteId" resultMap="busCustomMapper">
+SELECT
+	R.ROUTE_ID,
+	B.BUS_ID,
+	B.ROW_NUM,
+	B.COLUMN_NUM
+	
+FROM
+	ROUTE AS R
+	INNER JOIN BUS AS B
+		ON R.BUS_ID = B.BUS_ID
+WHERE 
+	R.ROUTE_ID = #{routeId}	
+	</select>
+</mapper>
+

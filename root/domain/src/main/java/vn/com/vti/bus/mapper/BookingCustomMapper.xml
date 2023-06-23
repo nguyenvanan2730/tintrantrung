@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.com.vti.bus.mapper.BookingCustomMapper">
+	<resultMap id="bookingCustomMapper"
+		type="vn.com.vti.bus.entity.BookingCustomized">
+
+		<id column="reservation_no" jdbcType="INTEGER"
+			property="reservationNo" />
+		<result column="reservation_datetime" jdbcType="TIMESTAMP"
+			property="reservationDatetime" />
+		<result column="route_id" jdbcType="INTEGER" property="routeId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="bus_id" jdbcType="INTEGER" property="busId" />
+		<result column="departure_bus_stop_id" jdbcType="INTEGER"
+			property="departureBusStopId" />
+		<result column="departure_bus_stop_name" jdbcType="VARCHAR"
+			property="departureBusStopName" />
+		<result column="departure_time" jdbcType="VARCHAR"
+			property="departureTime" />
+		<result column="arrival_bus_top_id" jdbcType="INTEGER"
+			property="arrivalBusStopId" />
+		<result column="arrival_bus_stop_name" jdbcType="VARCHAR"
+			property="arrivalBusStopName" />
+		<result column="arrival_time" jdbcType="VARCHAR"
+			property="arrivalTime" />
+		<result column="total_price" jdbcType="INTEGER"
+			property="totalPrice" />
+		<result column="price" jdbcType="INTEGER" property="price" />
+		<result column="total_seats" jdbcType="INTEGER"
+			property="totalSeats" />
+		<result column="full_name" jdbcType="VARCHAR"
+			property="fullName" />
+		<result column="tel" jdbcType="VARCHAR" property="tel" />
+		<result column="bus_full_name" jdbcType="VARCHAR"
+			property="busFullName" />
+		<result column="seat_name" jdbcType="VARCHAR"
+			property="seatName"/>
+		<result column="reserved_seats" jdbcType="INTEGER"
+			property="reservedSeats" />		
+<!-- 		 <collection property="seatNames" ofType="java.lang.String">-->
+<!--		<result column="seat_name" jdbcType="VARCHAR" />-->
+<!--		 </collection>-->
+
+	</resultMap>
+
+	<select id="selectByUserId" parameterType="java.lang.Integer"
+		resultMap="bookingCustomMapper">
+		SELECT
+		RV.reservation_no,
+		RV.reservation_datetime,
+		RV.route_id,
+		RV.user_id,
+		R.bus_id,
+		R.departure_bus_stop_id,
+		BD.bus_stop_name AS departure_bus_stop_name,
+		R.departure_time,
+		R.arrival_bus_stop_id,
+		BA.bus_stop_name AS arrival_bus_stop_name,
+		R.arrival_time,
+		R.price * (SELECT COUNT(*) FROM RESERVATION_DETAIL
+		WHERE reservation_no =
+		RV.reservation_no) AS total_price
+		FROM
+		RESERVATION RV
+		INNER JOIN ROUTE R ON RV.route_id = R.route_id
+		INNER JOIN
+		BUS_STOP BD ON R.departure_bus_stop_id = BD.bus_stop_id
+		INNER JOIN
+		BUS_STOP BA ON R.arrival_bus_stop_id = BA.bus_stop_id
+		INNER JOIN
+		RESERVATION_DETAIL RD ON RV.reservation_no = RD.reservation_no
+		WHERE
+		RV.USER_ID = #{memberId,jdbcType=INTEGER}
+		GROUP BY
+		RV.RESERVATION_NO,
+		R.BUS_ID,
+		r.departure_bus_stop_id,
+		bd.bus_stop_name,
+		r.departure_time,
+		r.arrival_bus_stop_id,
+		ba.bus_stop_name,
+		r.arrival_time,
+		total_price
+	</select>
+
+	<select id="getMembers" resultMap="bookingCustomMapper">
+	SELECT DISTINCT
+		RV.USER_ID,
+		M.LAST_NAME||M.FIRST_NAME AS FULL_NAME,
+		M.tel
+	FROM
+		RESERVATION AS RV
+		INNER JOIN MEMBER AS M
+		ON RV.USER_ID = M.MEMBER_ID
+	WHERE
+		RV.ROUTE_ID = #{routeId,jdbcType=INTEGER}
+		AND RESERVATION_DATETIME= #{reservationDate}
+	ORDER BY
+		RV.USER_ID
+	</select>
+
+<select id="getReservedSeatsForMember" resultMap="bookingCustomMapper">
+	SELECT 
+		RD.SEAT_NAME
+	FROM 
+		RESERVATION AS RV
+		INNER JOIN RESERVATION_DETAIL AS RD
+		ON RV.RESERVATION_NO = RD.RESERVATION_NO
+	WHERE 
+		USER_ID = #{userId}
+		AND ROUTE_ID = #{routeId}
+		AND RESERVATION_DATETIME = #{reservationDate}
+</select>
+
+	<select id="getRouteAndBus" resultMap="bookingCustomMapper">
+	SELECT
+		RV.reservation_datetime,
+		RV.route_id,
+		R.bus_id,
+		R.departure_bus_stop_id,
+		BD.bus_stop_name AS departure_bus_stop_name,
+		R.departure_time,
+		R.arrival_bus_stop_id,
+		BA.bus_stop_name AS arrival_bus_stop_name,
+		R.arrival_time,
+		B.COLUMN_NUM * B.ROW_NUM AS TOTAL_SEATS,
+		(B.NUMBER_PLACE || B.NUMBER_DIVISION ||' '|| B.NUMBER_KANA ||' '||
+		B.NUMBER_FIRST_HALF || '‐' || B.NUMBER_LATTER_HALF) AS BUS_FULL_NAME,
+		COUNT(RD.SEAT_NAME)AS RESERVED_SEATS
+	FROM
+		RESERVATION_DETAIL AS RD
+		INNER JOIN RESERVATION AS RV
+		ON RD.RESERVATION_NO = RV.RESERVATION_NO
+		INNER JOIN ROUTE R ON RV.route_id = R.route_id
+		INNER JOIN BUS_STOP BD ON R.departure_bus_stop_id = BD.bus_stop_id
+		INNER JOIN BUS_STOP BA ON R.arrival_bus_stop_id = BA.bus_stop_id
+		INNER JOIN BUS AS B ON B.BUS_ID = R.BUS_ID
+	WHERE
+		R.ROUTE_ID = #{routeId,jdbcType=INTEGER}
+		AND RESERVATION_DATETIME= #{reservationDate}
+	GROUP BY
+		RV.reservation_datetime,
+		RV.route_id,
+		R.BUS_ID,
+		r.departure_bus_stop_id,
+		bd.bus_stop_name,
+		r.departure_time,
+		r.arrival_bus_stop_id,
+		ba.bus_stop_name,
+		r.arrival_time,
+		TOTAL_SEATS,
+		BUS_FULL_NAME
+	</select>
+</mapper>

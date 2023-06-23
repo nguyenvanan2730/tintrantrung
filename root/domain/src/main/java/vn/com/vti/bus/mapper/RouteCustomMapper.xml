@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.com.vti.bus.mapper.RouteCustomMapper">
+  <resultMap id="routeCustomMapper" type="vn.com.vti.bus.entity.RouteCustom">
+  
+    <id column="route_id" jdbcType="INTEGER" property="routeId" />
+    <result column="departure_bus_stop_id" jdbcType="INTEGER" property="departureBusStopId" />
+    <result column="departure_time" jdbcType="VARCHAR" property="departureTime" />
+    <result column="arrival_bus_stop_id" jdbcType="INTEGER" property="arrivalBusStopId" />
+    <result column="arrival_time" jdbcType="VARCHAR" property="arrivalTime" />
+    <result column="run_start_date" jdbcType="TIMESTAMP" property="runStartDate" />
+    <result column="run_end_date" jdbcType="TIMESTAMP" property="runEndDate" />
+    <result column="bus_id" jdbcType="INTEGER" property="busId" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="departure_bus_stop_name" jdbcType="VARCHAR" property="departureBusStopName" />
+    <result column="arrival_bus_stop_name" jdbcType="VARCHAR" property="arrivalBusStopName" />
+    <result column="column_num" jdbcType="INTEGER" property="columnNum" />
+    <result column="seat_name" jdbcType="VARCHAR" property="seatName" />
+    <result column="total_seat" jdbcType="VARCHAR" property="totalSeat" />
+    <result column="available_seats" jdbcType="VARCHAR" property="availableSeats" />
+    <result column="row_number" jdbcType="VARCHAR" property="rowNumber" />
+  </resultMap>
+  
+  <select id="selectByBusId" parameterType="java.lang.Integer" resultMap="routeCustomMapper">
+	SELECT			
+		*		
+	FROM			
+		ROUTE		
+	WHERE			
+		BUS_ID = #{busId,jdbcType=INTEGER}	
+  </select>
+  
+  <select id="selectAll" resultMap="routeCustomMapper">
+	SELECT
+		ROW_NUMBER() OVER (ORDER BY R.ROUTE_ID)
+		,R.ROUTE_ID
+		,RES.RESERVATION_DATETIME
+		,DEPARTURE.BUS_STOP_NAME AS DEPARTURE_BUS_STOP_NAME
+		,R.DEPARTURE_TIME
+		,ARRIVAL.BUS_STOP_NAME AS ARRIVAL_BUS_STOP_NAME
+		,R.ARRIVAL_TIME
+		,B.COLUMN_NUM
+		,R.PRICE
+		,(B.ROW_NUM * B.COLUMN_NUM) - COALESCE(RD.RESERVED_SEATS, 0) AS AVAILABLE_SEATS
+		,(B.ROW_NUM * B.COLUMN_NUM) AS TOTAL_SEATS
+	FROM
+		ROUTE R
+	JOIN
+		BUS B ON R.BUS_ID = B.BUS_ID
+	JOIN
+		BUS_STOP AS DEPARTURE ON R.DEPARTURE_BUS_STOP_ID = DEPARTURE.BUS_STOP_ID
+	JOIN
+		BUS_STOP AS ARRIVAL ON R.ARRIVAL_BUS_STOP_ID = ARRIVAL.BUS_STOP_ID
+	LEFT JOIN
+		(
+			SELECT
+				RES.ROUTE_ID,
+				RES.RESERVATION_DATETIME, 
+				COUNT(RD.RESERVATION_DETAIL_NO) AS RESERVED_SEATS
+			FROM
+				RESERVATION RES
+			JOIN
+				RESERVATION_DETAIL RD ON RES.RESERVATION_NO = RD.RESERVATION_NO
+			WHERE
+				RES.RESERVATION_DATETIME = TO_DATE(#{date}, 'YYYY-MM-DD')
+			GROUP BY
+				RES.ROUTE_ID,
+				RES.RESERVATION_DATETIME
+		) RD ON R.ROUTE_ID = RD.ROUTE_ID
+	LEFT JOIN
+		RESERVATION RES ON R.ROUTE_ID = RES.ROUTE_ID 
+		AND 
+		RES.RESERVATION_DATETIME = TO_DATE(#{date}, 'YYYY-MM-DD')
+	WHERE
+		R.RUN_START_DATE &lt;= TO_DATE(#{date}, 'YYYY-MM-DD') 
+		AND (R.RUN_END_DATE IS NULL OR R.RUN_END_DATE &gt;= TO_DATE(#{date}, 'YYYY-MM-DD')) 
+		AND DEPARTURE.BUS_STOP_NAME LIKE #{dBusStopName} 
+		AND ARRIVAL.BUS_STOP_NAME LIKE #{aBusStopName} 
+	GROUP BY
+		R.ROUTE_ID
+		,RES.RESERVATION_DATETIME
+		,B.ROW_NUM
+		,B.COLUMN_NUM
+		,RD.RESERVED_SEATS
+		,DEPARTURE.BUS_STOP_NAME
+		,ARRIVAL.BUS_STOP_NAME
+	ORDER BY
+		R.ROUTE_ID
+  </select>
+  
+  <select id="search" resultMap="routeCustomMapper">
+ 	
+	SELECT
+		ROW_NUMBER() OVER (ORDER BY R.ROUTE_ID)
+		,R.ROUTE_ID
+		,RES.RESERVATION_DATETIME
+		,DEPARTURE.BUS_STOP_NAME AS DEPARTURE_BUS_STOP_NAME
+		,R.DEPARTURE_TIME
+		,ARRIVAL.BUS_STOP_NAME AS ARRIVAL_BUS_STOP_NAME
+		,R.ARRIVAL_TIME
+		,B.COLUMN_NUM
+		,R.PRICE
+		,(B.ROW_NUM * B.COLUMN_NUM) - COALESCE(RD.RESERVED_SEATS, 0) AS AVAILABLE_SEATS
+		,(B.ROW_NUM * B.COLUMN_NUM) AS TOTAL_SEATS
+	FROM
+		ROUTE R
+	JOIN
+		BUS B ON R.BUS_ID = B.BUS_ID
+	JOIN
+		BUS_STOP AS DEPARTURE ON R.DEPARTURE_BUS_STOP_ID = DEPARTURE.BUS_STOP_ID
+	JOIN
+		BUS_STOP AS ARRIVAL ON R.ARRIVAL_BUS_STOP_ID = ARRIVAL.BUS_STOP_ID
+	LEFT JOIN
+		(
+			SELECT
+				RES.ROUTE_ID,
+				RES.RESERVATION_DATETIME, 
+				COUNT(RD.RESERVATION_DETAIL_NO) AS RESERVED_SEATS
+			FROM
+				RESERVATION RES
+			JOIN
+				RESERVATION_DETAIL RD ON RES.RESERVATION_NO = RD.RESERVATION_NO
+			WHERE
+				RES.RESERVATION_DATETIME = TO_DATE(#{date}, 'YYYY-MM-DD')
+			GROUP BY
+				RES.ROUTE_ID,
+				RES.RESERVATION_DATETIME
+		) RD ON R.ROUTE_ID = RD.ROUTE_ID
+	LEFT JOIN
+		RESERVATION RES ON R.ROUTE_ID = RES.ROUTE_ID 
+		AND 
+		RES.RESERVATION_DATETIME = TO_DATE(#{date}, 'YYYY-MM-DD')
+	WHERE
+		R.RUN_START_DATE &lt;= TO_DATE(#{date}, 'YYYY-MM-DD') 
+		AND (R.RUN_END_DATE IS NULL OR R.RUN_END_DATE &gt;= TO_DATE(#{date}, 'YYYY-MM-DD')) 
+		AND DEPARTURE.BUS_STOP_NAME LIKE #{dBusStopName} 
+		AND ARRIVAL.BUS_STOP_NAME LIKE #{aBusStopName} 
+	GROUP BY
+		R.ROUTE_ID
+		,RES.RESERVATION_DATETIME
+		,B.ROW_NUM
+		,B.COLUMN_NUM
+		,RD.RESERVED_SEATS
+		,DEPARTURE.BUS_STOP_NAME
+		,ARRIVAL.BUS_STOP_NAME
+	ORDER BY
+		R.ROUTE_ID
+  </select>
+  
+	<select id="selectByRouteId" resultMap="routeCustomMapper">
+	SELECT
+		R.ROUTE_ID,
+		DBT.BUS_STOP_NAME AS DEPARTURE_BUS_STOP_NAME,
+		R.DEPARTURE_TIME,
+		ABT.BUS_STOP_NAME AS ARRIVAL_BUS_STOP_NAME,
+		R.ARRIVAL_TIME,
+		R.PRICE,
+		B.ROW_NUM * B.COLUMN_NUM AS TOTAL_SEAT
+	FROM
+		ROUTE AS R
+		INNER JOIN BUS_STOP AS DBT ON R.DEPARTURE_BUS_STOP_ID = DBT.BUS_STOP_ID
+		INNER JOIN BUS_STOP AS ABT ON R.ARRIVAL_BUS_STOP_ID = ABT.BUS_STOP_ID
+		INNER JOIN BUS AS B ON R.BUS_ID = B.BUS_ID
+	WHERE
+		R.ROUTE_ID = #{routeId}	
+	</select>
+</mapper>

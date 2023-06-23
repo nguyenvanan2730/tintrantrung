@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.com.vti.bus.mapper.ReservationCustomMapper">
+  <resultMap id="reservationCustomMapper" type="vn.com.vti.bus.entity.ReservationCustom">
+  
+    <id column="reservation_no" jdbcType="INTEGER" property="reservationNo" />
+    <result column="reservation_datetime" jdbcType="TIMESTAMP" property="reservationDatetime" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="route_id" jdbcType="INTEGER" property="routeId" />
+  </resultMap>
+  
+  <select id="selectByRouteId" parameterType="java.lang.Integer" resultMap="reservationCustomMapper">
+	SELECT			
+		*		
+	FROM			
+		reservation		
+	WHERE			
+		route_id = #{routeId,jdbcType=INTEGER}	
+  </select>
+ 
+</mapper>

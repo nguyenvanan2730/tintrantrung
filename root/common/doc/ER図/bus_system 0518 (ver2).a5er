@@ -1,0 +1,310 @@
+﻿# A5:ER FORMAT:16
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.17.4 Copyright © 1997 - 2022 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=BUS SYSTEM 2
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",6,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=6
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+RDBMSType=6
+RDBMSTypeName=PostgreSQL
+GenerateComment=0
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=ROUTE
+LName=路線
+Comment=
+TableOption=
+Page=MAIN
+Left=1350
+Top=100
+Field="路線ID","route_id","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="出発停留所ID","departure_bus_stop_id","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="出発時刻","departure_time","varchar(5)","NOT NULL",,"","",$FFFFFFFF,""
+Field="到着停留所ID","arrival_bus_stop_id","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="到着時刻","arrival_time","varchar(5)","NOT NULL",,"","",$FFFFFFFF,""
+Field="運行開始日","run_start_date","timestamp","NOT NULL",,"","",$FFFFFFFF,""
+Field="運行終了日","run_end_date","timestamp",,,"","",$FFFFFFFF,""
+Field="バスID","bus_id","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="料金","price","integer","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230516222744
+Position="MAIN",1350,100,517,250
+ZOrder=1
+
+[Entity]
+PName=MANAGER
+LName=運用管理者
+Comment=
+TableOption=
+Page=MAIN
+Left=650
+Top=150
+Field="管理者ID","manager_id","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ログインID","login_id","varchar(30)","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","password","varchar(64)","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230519204108
+Position="MAIN",650,150,460,173
+ZOrder=2
+
+[Entity]
+PName=BUS
+LName=バス
+Comment=
+TableOption=
+Page=MAIN
+Left=600
+Top=500
+Field="バスID","bus_id","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ナンバー（地名）","number_place","varchar(10)","NOT NULL",,"","",$FFFFFFFF,""
+Field="ナンバー（分類番号）","number_division","char(2)","NOT NULL",,"","",$FFFFFFFF,""
+Field="ナンバー（かな）","number_kana","char(1)","NOT NULL",,"","",$FFFFFFFF,""
+Field="ナンバー（一連指定番号前半）","number_first_half","char(2)","NOT NULL",,"","",$FFFFFFFF,""
+Field="ナンバー（一連指定番号後半）","number_latter_half","char(2)","NOT NULL",,"","",$FFFFFFFF,""
+Field="１列あたりシート数","row_num","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="シート列数","column_num","integer","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230519204117
+Position="MAIN",600,500,586,260
+ZOrder=3
+
+[Entity]
+PName=RESERVATION
+LName=予約
+Comment=
+TableOption=
+Page=MAIN
+Left=1650
+Top=600
+Field="予約番号","reservation_no","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="予約日時","reservation_datetime","timestamp","NOT NULL",,"","",$FFFFFFFF,""
+Field="会員ID","user_id","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="路線ID","route_id","integer","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230517193611
+Position="MAIN",1650,600,456,175
+ZOrder=5
+
+[Entity]
+PName=MEMBER
+LName=会員
+Comment=
+TableOption=
+Page=MAIN
+Left=2500
+Top=550
+Field="会員ID","member_id","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="姓","last_name","varchar(20)","NOT NULL",,"","",$FFFFFFFF,""
+Field="名","first_name","varchar(20)","NOT NULL",,"","",$FFFFFFFF,""
+Field="電話番号","tel","varchar(13)","NOT NULL",,"","",$FFFFFFFF,""
+Field="メール","email","varchar(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","password","varchar(64)","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230517222708
+Position="MAIN",2500,550,346,179
+ZOrder=6
+
+[Entity]
+PName=BUS_STOP
+LName=バス停留所
+Comment=
+TableOption=
+Page=MAIN
+Left=2200
+Top=100
+Field="バス停留所ID","bus_stop_id","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="バス停留所名","bus_stop_name","varchar(10)","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230516225325
+Position="MAIN",2200,100,491,115
+ZOrder=7
+
+[Relation]
+Entity1=BUS_STOP
+Entity2=ROUTE
+RelationType1=2
+RelationType2=3
+Fields1=bus_stop_id
+Fields2=departure_bus_stop_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,767,9233,5107,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=77
+Bar2=923
+Bar3=511
+TermPos1=R
+TermPos2=R
+ZOrder=10
+
+[Relation]
+Entity1=BUS_STOP
+Entity2=ROUTE
+RelationType1=2
+RelationType2=3
+Fields1=bus_stop_id
+Fields2=arrival_bus_stop_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,767,9233,2411,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=77
+Bar2=923
+Bar3=241
+TermPos1=R
+TermPos2=R
+ZOrder=11
+
+[Relation]
+Entity1=ROUTE
+Entity2=RESERVATION
+RelationType1=2
+RelationType2=3
+Fields1=route_id
+Fields2=route_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4591,5409,3957,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=459
+Bar2=541
+Bar3=396
+TermPos1=R
+TermPos2=R
+ZOrder=13
+
+[Relation]
+Entity1=MEMBER
+Entity2=RESERVATION
+RelationType1=2
+RelationType2=3
+Fields1=member_id
+Fields2=user_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2670,7330,2114,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=267
+Bar2=733
+Bar3=211
+TermPos1=R
+TermPos2=R
+ZOrder=14
+
+[Relation]
+Entity1=ROUTE
+Entity2=BUS
+RelationType1=3
+RelationType2=2
+Fields1=bus_id
+Fields2=bus_id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2176,2401,607,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20230516210457
+LineMode=0
+Bar1=218
+Bar2=240
+Bar3=61
+TermPos1=R
+TermPos2=R
+ZOrder=20
+
+[Entity]
+PName=RESERVATION_DETAIL
+LName=予約詳細
+Comment=
+TableOption=
+Page=MAIN
+Left=1150
+Top=950
+Field="予約番号","reservation_no","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="予約詳細番号","reservation_detail_no","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="座席名","seat_name","varchar(3)","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20230517201731
+Position="MAIN",1150,950,455,102
+ZOrder=23
+
+[Relation]
+Entity1=RESERVATION
+Entity2=RESERVATION_DETAIL
+RelationType1=2
+RelationType2=4
+Fields1=reservation_no
+Fields2=reservation_no
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5150,4850,1398,R,R,""
+Dependence=0
+Caption=
+PName=
+NoDDL=1
+ModifiedDateTime=20230517201812
+LineMode=0
+Bar1=515
+Bar2=485
+Bar3=140
+TermPos1=R
+TermPos2=R
+ZOrder=24

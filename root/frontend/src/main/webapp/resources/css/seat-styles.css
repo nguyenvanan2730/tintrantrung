@@ -1,0 +1,153 @@
+
+
+table {
+	border-collapse: collapse;
+}
+
+table td {
+	width: 200px;
+	padding: 8px;
+	text-align: left;
+	border: 1px solid #ddd;	
+}
+.row-title{
+	color: white;
+	background-color: #053783;
+}
+.handle-wrapper-img {
+	width: 60px;
+	height: 60px;
+	margin-left:250px;
+	margin-bottom: 20px;
+}
+
+.bus-layout {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+}
+
+.bus-row {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.seat {
+	width: 60px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	background-image: url(/resources/imgs/bg_vacancy.jpg);
+	background-size: 100%;
+}
+
+.seat:hover {
+	background-color: rgb(255, 158, 62);
+}
+
+.seat-number {
+	font-size: 14px;
+}
+
+.reserved {
+	background-image: url(/resources/imgs/bg_reserved.jpg);
+	cursor: not-allowed;
+}
+
+.selected {
+	background-image: url(/resources/imgs/bg_selected.jpg);
+}
+
+.seat-area {
+	width: 400px;
+	padding: 30px;
+	margin: 20px 20px 20px 0;
+	border: 2px solid rgb(255, 128, 0);
+	border-radius: 12px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.driving_seat {
+	margin-left: 250px;
+	margin-bottom: 20px;
+}
+.seat-wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+.seat-explain{
+	width: 400px;
+	margin: 20px 0 0 50px;
+}
+.seat-img{
+	width: 40px;
+	height: 40px;
+}
+.popup {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #ccc;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.error-reserved-seat,.error-all-reserved {
+    color: red;
+}
+.ok-button {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.price {
+	text-decoration: underline;
+	margin: 10px
+}
+
+.total-price {
+	margin: 10px
+}
+
+.button-row {
+    width: 400px;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-row-confirm {
+    width: 300px;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+#button {
+	width: 100px;
+    background-color: #5143d9;
+    border-color: #5143d9;
+    color: #FFFFFF;
+}
+
+#button:hover {
+	background-color: #053783;
+	border-color: #053783;	
+}
+
+#banner {
+	height: 165px;
+    z-index: 0;
+	padding: 0 0;
+}
+
+.c-img {
+	height: 100%;
+	object-fit: cover;
+	opacity: 0.7;
+	object-position: 100% 10%;
+}

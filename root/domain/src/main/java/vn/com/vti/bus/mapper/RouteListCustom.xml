@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.com.vti.bus.mapper.RouteListCustom">
+	<resultMap id="routeCustomized" type="vn.com.vti.bus.entity.RouteCustomized">
+		<id column="route_id" jdbcType="INTEGER" property="routeId" />
+		<result column="departure_bus_stop_id" jdbcType="INTEGER" property="departureBusStopId" />
+		<result column="departure_bus_stop_name" jdbcType="VARCHAR" property="departureBusStopName" />
+		<result column="departure_time" jdbcType="VARCHAR" property="departureTime" />
+		<result column="arrival_bus_stop_id" jdbcType="INTEGER" property="arrivalBusStopId" />
+		<result column="arrival_bus_stop_name" jdbcType="VARCHAR" property="arrivalBusStopName" />
+		<result column="arrival_time" jdbcType="VARCHAR" property="arrivalTime" />
+		<result column="run_start_date" jdbcType="INTEGER" property="runStartDate" />
+		<result column="run_end_date" jdbcType="INTEGER" property="runEndDate" />
+		<result column="bus_id" jdbcType="INTEGER" property="busId" />
+		<result column="price" jdbcType="INTEGER" property="price" />
+		<result column="route_full_name" jdbcType="VARCHAR" property="routeFullName"/>
+		
+	</resultMap>
+
+	<select id="selectAll" resultMap="routeCustomized">
+		SELECT
+			R.route_id,
+			R.departure_bus_stop_id,
+			DBT.bus_stop_name AS
+			departure_bus_stop_name,
+			R.departure_time,
+			R.arrival_bus_stop_id,
+			ABT.bus_stop_name AS arrival_bus_stop_name,
+			R.arrival_time,
+			R.run_start_date,
+			R.run_end_date,
+			R.bus_id,
+			R.price
+		FROM
+		ROUTE AS R
+		INNER JOIN
+		BUS_STOP AS DBT ON R.DEPARTURE_BUS_STOP_ID = DBT.BUS_STOP_ID
+		INNER JOIN
+		BUS_STOP AS ABT ON R.ARRIVAL_BUS_STOP_ID = ABT.BUS_STOP_ID
+		ORDER BY
+		R.ROUTE_ID
+	</select>
+
+	<select id="selectByDate" resultMap="routeCustomized">
+		SELECT
+		R.route_id,
+		R.departure_bus_stop_id,
+		DBT.bus_stop_name AS
+		departure_bus_stop_name,
+		R.departure_time,
+		R.arrival_bus_stop_id,
+		ABT.bus_stop_name AS arrival_bus_stop_name,
+		R.arrival_time,
+		R.run_start_date,
+		R.run_end_date,
+		R.bus_id,
+		R.price
+		FROM
+		ROUTE AS R
+		INNER JOIN
+		BUS_STOP AS DBT ON R.DEPARTURE_BUS_STOP_ID = DBT.BUS_STOP_ID
+		INNER JOIN
+		BUS_STOP AS ABT ON R.ARRIVAL_BUS_STOP_ID = ABT.BUS_STOP_ID
+		WHERE
+		TO_CHAR(R.RUN_START_DATE, 'YYYYMMDD') &lt;= #{date}
+		AND
+		(TO_CHAR(R.RUN_END_DATE, 'YYYYMMDD') &gt;= #{date} OR R.RUN_END_DATE
+		IS NULL)
+		ORDER BY R.ROUTE_ID
+	</select>
+	
+	<select id="getReservedRoute" resultMap="routeCustomized">
+SELECT
+    R.route_id,
+    DBS.bus_stop_name AS departure_bus_stop_name,
+    R.departure_time,
+    R.arrival_bus_stop_id,
+    ABS.bus_stop_name AS arrival_bus_stop_name,
+    'ID:' || R.route_id || '・' || DBS.bus_stop_name || '→' || ABS.bus_stop_name || '・' || R.departure_time || '～' || R.arrival_time AS route_full_name
+FROM
+    RESERVATION AS RES
+    INNER JOIN ROUTE AS R ON RES.ROUTE_ID = R.ROUTE_ID
+    INNER JOIN BUS_STOP AS DBS ON R.DEPARTURE_BUS_STOP_ID = DBS.BUS_STOP_ID
+    INNER JOIN BUS_STOP AS ABS ON R.ARRIVAL_BUS_STOP_ID = ABS.BUS_STOP_ID
+GROUP BY
+    R.route_id,
+    departure_bus_stop_name,
+    arrival_bus_stop_name,
+    R.departure_time,
+    R.arrival_time,
+    route_full_name
+ORDER BY
+    R.route_id;
+
+	</select>
+	
+</mapper>

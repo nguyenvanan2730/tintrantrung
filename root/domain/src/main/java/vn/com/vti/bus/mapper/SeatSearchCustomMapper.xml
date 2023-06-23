@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.com.vti.bus.mapper.SeatSearchCustomMapper">
+	<resultMap id="seatSearchCustomMapper"
+		type="vn.com.vti.bus.entity.SeatSearchCustomized">
+		
+		 <result column="seat_name" property="seatName"/>
+	</resultMap>	
+	
+	<select id="getReservedSeats" resultMap="seatSearchCustomMapper">
+SELECT
+RD.SEAT_NAME
+FROM
+	RESERVATION_DETAIL AS RD
+	INNER JOIN RESERVATION AS RES
+		ON RD.RESERVATION_NO = RES.RESERVATION_NO
+	INNER JOIN ROUTE AS R
+		ON RES.ROUTE_ID = R.ROUTE_ID
+WHERE
+	R.ROUTE_ID = #{routeId}
+	AND RES.RESERVATION_DATETIME = #{reservationDatetime}
+
+	</select>
+</mapper>
+

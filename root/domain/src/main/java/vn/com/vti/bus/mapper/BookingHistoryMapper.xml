@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.com.vti.bus.mapper.BookingHistoryMapper">
+  <resultMap id="bookingHistoryMapper" type="vn.com.vti.bus.entity.BookingCustomized">
+  
+    <id column="reservation_no" jdbcType="INTEGER" property="reservationNo" />
+    <result column="reservation_datetime" jdbcType="TIMESTAMP" property="reservationDatetime" />
+    <result column="route_id" jdbcType="INTEGER" property="routeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="bus_id" jdbcType="INTEGER" property="busId" />
+    <result column="departure_bus_stop_id" jdbcType="INTEGER" property="departureBusStopId" />
+    <result column="departure_bus_stop_name" jdbcType="VARCHAR" property="departureBusStopName" />
+    <result column="departure_time" jdbcType="VARCHAR" property="departureTime" />
+    <result column="arrival_bus_top_id" jdbcType="INTEGER" property="arrivalBusStopId" />
+    <result column="arrival_bus_stop_name" jdbcType="VARCHAR" property="arrivalBusStopName" />
+    <result column="arrival_time" jdbcType="VARCHAR" property="arrivalTime" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="seat_name" jdbcType="VARCHAR" property="seatName" />
+        <collection property="seatNames" ofType="java.lang.String">
+      <result column="seat_name" jdbcType="VARCHAR" />
+    </collection>
+    
+  </resultMap>
+
+	<select id="getBookingHistory" parameterType="java.lang.Integer" resultMap="bookingHistoryMapper">
+  SELECT
+    RV.reservation_no,
+    RV.reservation_datetime,
+    RV.route_id,
+    RV.user_id,
+    R.bus_id,
+    R.departure_bus_stop_id,
+    BD.bus_stop_name AS departure_bus_stop_name,
+    R.departure_time,
+    R.arrival_bus_stop_id,
+    BA.bus_stop_name AS arrival_bus_stop_name,
+    R.arrival_time,
+    R.price * (SELECT COUNT(*) FROM RESERVATION_DETAIL WHERE reservation_no = RV.reservation_no) AS price,
+    RD.seat_name
+  FROM
+    RESERVATION RV
+    INNER JOIN ROUTE R ON RV.route_id = R.route_id
+    INNER JOIN BUS_STOP BD ON R.departure_bus_stop_id = BD.bus_stop_id
+    INNER JOIN BUS_STOP BA ON R.arrival_bus_stop_id = BA.bus_stop_id
+    INNER JOIN RESERVATION_DETAIL RD ON RV.reservation_no = RD.reservation_no
+  WHERE
+    RV.user_id = #{memberId,jdbcType=INTEGER}
+  ORDER BY
+    RV.reservation_datetime DESC
+</select>
+     <delete id="deleteBooking" parameterType="java.lang.Integer">
+    DELETE FROM RESERVATION WHERE reservation_no = #{reservationNo}
+  </delete>
+</mapper>

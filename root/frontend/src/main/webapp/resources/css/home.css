@@ -1,0 +1,186 @@
+
+
+.banner {
+	width:100%!important ;
+    z-index: 0;
+    position: absolute;
+}
+
+.c-item{
+	height: 370px;
+}
+
+.c-img {
+	height: 100%;
+	object-fit: cover;
+}
+
+.search-box .row{
+	width: 900px;
+	z-index: 1;
+	position: relative;
+	margin-top: 300px;
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+    align-items: flex-end;
+    
+
+    border-radius: 15px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(8, 7, 16, 0.6);
+
+}
+
+
+label {
+    font-size: 17px;
+    font-weight: 550;
+}
+
+#input, #datepicker {
+    width: 180px;
+    height: 50px;
+    font-size: 19px;
+    font-weight: 550!important;
+    color: #0b0a1282!important;
+    border-radius: 10px;
+}
+
+::placeholder{
+	color: #0b0a1282!important;
+}
+
+#button {
+    background-color: #5143d9;
+    border-color: #5143d9;
+    color: #FFFFFF;
+    width: 140px;
+    height: 35px;
+    font-size: 15px;
+    font-weight: 550;
+}
+
+#button:hover {
+	background-color: #053783;
+	border-color: #053783;
+}
+
+#search-button{
+	background-color: #5143d9;
+    border-color: #5143d9;
+    color: #FFFFFF;
+    width: 180px;
+    height: 50px;
+    font-size: 17px;
+    font-weight: 550;
+    border-radius: 10px;
+}
+
+#search-button:hover {
+	background-color: #053783;
+	border-color: #053783;
+}
+
+
+
+
+.btn {
+	background-color: #5143d9;
+    border-color: #5143d9;
+    color: #FFFFFF;
+    width: 140px;
+    height: 35px;
+    font-size: 15px;
+    font-weight: 550;
+}
+
+.btn:hover {
+	background-color: #053783!important;
+	border-color: #053783;
+}
+
+h4 {
+    color: #053783;
+    font-weight: 550;
+}
+
+h5 {
+    color: #053783;
+    font-weight: 550;
+}
+
+.advertise-title, .member-title {
+    background-color: #FFFFFF
+}
+
+.advertise,.member {
+    background-color: #FFFFFF
+}
+
+
+.about {
+    background-color: #f3f5f6;
+    font-size: 15px;
+}
+
+.about p {
+    margin: 0
+}
+
+
+.card {
+	transition: all 0.3s;
+	border-radius: 15px;
+}
+
+.member .card {
+	transition: all 0.3s;
+	border-radius: 15px;
+	border-color: #fff;
+}
+
+.card img {
+	border-radius: 15px 15px 0 0 ;
+}
+
+.card:hover {
+	transform: scale(1.1);
+}
+
+.advertise .row, .member .row {
+display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-content: space-around;
+    align-items: stretch;
+    flex-direction: row;
+}
+
+.contact input,.contact textarea {
+	background-color: #f5f5f6;
+	border-color:#f5f5f6 ;
+	border-radius: 7px;
+	font-size: 16px;
+	font-weight: 450;
+}
+
+.contact label {
+	color: #85878a;
+	font-size: 15px;
+}
+
+.contact #button{
+	width: 150px;
+	height: 36px;
+}
+
+iframe{
+	border-radius: 20px;
+}
